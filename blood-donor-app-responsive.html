@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>متبرعون بالدم</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 20px auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1, h2 {
+      color: #c00;
+      text-align: center;
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    button {
+      padding: 10px 20px;
+      background-color: #c00;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 5px;
+    }
+    .center-button {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .tab-buttons {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-button {
+      padding: 10px 20px;
+      background-color: #eee;
+      border: none;
+      margin: 5px;
+      cursor: pointer;
+      flex: 1;
+      min-width: 150px;
+    }
+    .tab-button.active {
+      background-color: #c00;
+      color: #fff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+    .popup-message {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+      z-index: 9999;
+      text-align: center;
+      width: 90%;
+      max-width: 350px;
+      box-sizing: border-box;
+    }
+    .popup-message button {
+      background-color: #c00;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin: 10px 5px 0;
+    }
+    #editPopup {
+      display: none;
+    }
+    footer {
+      text-align: center;
+      margin-top: 30px;
+      color: #555;
+    }
+  
+    @media (max-width: 768px) {
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+      }
+  
+      th, td {
+        font-size: 14px;
+        padding: 8px;
+      }
+  
+      .form-group input, .form-group select {
+        font-size: 14px;
+        padding: 8px;
+      }
+  
+      .tab-button {
+        min-width: unset;
+        font-size: 14px;
+        padding: 8px 10px;
+      }
+    }
+  
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>متبرعون بالدم... قطرة أمل تنقذ حياة</h1>
+  <p style="text-align: center; font-size: 16px; color: #555; margin-top: 10px;">نرجو من المتبرعين تعبئة بياناتهم الصحيحة وكاملة مع تحديد متى آخر مره تم التبرع فيها حتى يسهل على الذين يبحثون عن الدم الوصول اليكم وشكراً.</p>
+
+  <div class="tab-buttons">
+    <button class="tab-button active" onclick="openTab('register')">تسجيل كمتبرع</button>
+    <button class="tab-button" onclick="openTab('search')">البحث عن متبرع</button>
+  </div>
+
+  <!-- تسجيل -->
+  <div id="register" class="tab-content active">
+    <h2>تسجيل متبرع</h2>
+    <form id="donorForm" onsubmit="saveDonor(event)">
+      <div class="form-group"><label>الاسم:</label><input type="text" id="name" required></div>
+      <div class="form-group"><label>فصيلة الدم:</label>
+        <select id="bloodType" required>
+          <option value="">اختر</option>
+          <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+          <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+        </select>
+      </div>
+      <div class="form-group"><label>رقم التواصل:</label><input type="text" id="phone" required></div>
+      <div class="form-group"><label>المدينة:</label><input type="text" id="address"></div>
+      <div class="form-group"><label>المنطقة:</label><input type="text" id="district"></div>
+      <div class="form-group"><label>مكان السكن:</label><input type="text" id="residence"></div>
+      <div class="form-group"><label>آخر تبرع:</label><input type="date" id="lastDonation"></div>
+      <div class="center-button"><button type="submit">تسجيل</button></div>
+    </form>
+    <div class="center-button">
+      <button onclick="openEditPopup()">تعديل البيانات</button>
+    </div>
+  </div>
+
+  <!-- البحث -->
+  <div id="search" class="tab-content">
+    <h2>البحث عن متبرع</h2>
+    <div class="form-group">
+      <label>فلترة حسب فصيلة الدم:</label>
+      <select id="filterBloodType" onchange="renderSearchTable()">
+        <option value="">الكل</option>
+        <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>فلترة بالاسم أو رقم التواصل:</label>
+      <input type="text" id="filterName" placeholder="ابحث بالاسم أو رقم التواصل" onkeyup="renderSearchTable()">
+    </div>
+    <table id="donorTableSearch">
+      <thead>
+        <tr>
+          <th>الاسم</th><th>الفصيلة</th><th>رقم التواصل</th><th>المدينة</th>
+          <th>المنطقة</th><th>السكن</th><th>آخر تبرع</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- نافذة التعديل -->
+<div id="editPopup" class="popup-message">
+  <button onclick="closeEditPopup()">إغلاق</button>
+  <div class="form-group">
+    <label>ادخل الاسم للبحث:</label>
+    <input type="text" id="searchNameInput">
+    <button onclick="searchDonor()">بحث</button>
+  </div>
+  <form id="editFormElement" style="display:none;">
+    <div class="form-group"><label>الاسم:</label><input type="text" id="editName" required></div>
+    <div class="form-group"><label>فصيلة الدم:</label>
+      <select id="editBloodType" required>
+        <option>O+</option><option>O-</option><option>A+</option><option>A-</option>
+        <option>B+</option><option>B-</option><option>AB+</option><option>AB-</option>
+      </select>
+    </div>
+    <div class="form-group"><label>رقم التواصل:</label><input type="text" id="editPhone" required></div>
+    <div class="form-group"><label>المدينة:</label><input type="text" id="editAddress"></div>
+    <div class="form-group"><label>المنطقة:</label><input type="text" id="editDistrict"></div>
+    <div class="form-group"><label>مكان السكن:</label><input type="text" id="editResidence"></div>
+    <div class="form-group"><label>آخر تبرع:</label><input type="date" id="editLastDonation"></div>
+    <div class="center-button">
+      <button type="button" onclick="saveEdit()">حفظ</button>
+      <button type="button" onclick="deleteDonor()">حذف</button>
+    </div>
+  </form>
+</div>
+
+<!-- رسالة نجاح التسجيل -->
+<div id="successPopup" class="popup-message" style="display:none;">
+  <p>تم تسجيل بياناتك بنجاح، جزاك الله خيراً وجعلها في ميزان حسناتك.</p>
+  <button onclick="document.getElementById('successPopup').style.display='none'">إغلاق</button>
+</div>
+
+<!-- تأكيد الحذف -->
+<div id="deleteConfirmPopup" class="popup-message" style="display:none;">
+  <p>هل أنت متأكد أنك تريد حذف هذا المتبرع؟</p>
+  <div class="center-button">
+    <button onclick="confirmDelete()">نعم، حذف</button>
+    <button onclick="cancelDelete()">إلغاء</button>
+  </div>
+</div>
+
+<footer>إعداد م/نبيل اليافعي</footer>
+
+<script>
+let donors = JSON.parse(localStorage.getItem("donors")) || [];
+let deleteIndex = null;
+
+function openTab(tabId) {
+  const tabs = document.querySelectorAll('.tab-content');
+  const buttons = document.querySelectorAll('.tab-button');
+  tabs.forEach(tab => tab.classList.remove('active'));
+  buttons.forEach(btn => btn.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  event.target.classList.add('active');
+  if (tabId === 'search') renderSearchTable();
+}
+
+function renderSearchTable() {
+  const filterType = document.getElementById("filterBloodType").value;
+  const filterText = document.getElementById("filterName").value.toLowerCase();
+  const tbody = document.querySelector("#donorTableSearch tbody");
+  tbody.innerHTML = "";
+  const filtered = donors.filter(d => {
+    return (!filterType || d.bloodType === filterType) &&
+           (d.name.toLowerCase().includes(filterText) || d.phone.toLowerCase().includes(filterText));
+  });
+  filtered.forEach(d => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${d.name}</td><td>${d.bloodType}</td><td>${d.phone}</td><td>${d.address}</td><td>${d.district}</td><td>${d.residence}</td><td>${d.lastDonation || ''}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+function saveDonor(event) {
+  event.preventDefault();
+  const donor = {
+    name: document.getElementById("name").value.trim(),
+    bloodType: document.getElementById("bloodType").value,
+    phone: document.getElementById("phone").value.trim(),
+    address: document.getElementById("address").value.trim(),
+    district: document.getElementById("district").value.trim(),
+    residence: document.getElementById("residence").value.trim(),
+    lastDonation: document.getElementById("lastDonation").value
+  };
+  donors.push(donor);
+  localStorage.setItem("donors", JSON.stringify(donors));
+  document.getElementById("donorForm").reset();
+  renderSearchTable();
+  document.getElementById("successPopup").style.display = 'block';
+}
+
+function openEditPopup() {
+  document.getElementById("editPopup").style.display = "block";
+  document.getElementById("editFormElement").style.display = "none";
+  document.getElementById("searchNameInput").value = "";
+}
+
+function closeEditPopup() {
+  document.getElementById("editPopup").style.display = "none";
+}
+
+function searchDonor() {
+  const name = document.getElementById("searchNameInput").value.trim();
+  const donor = donors.find(d => d.name === name);
+  if (donor) {
+    document.getElementById("editFormElement").style.display = "block";
+    document.getElementById("editName").value = donor.name;
+    document.getElementById("editBloodType").value = donor.bloodType;
+    document.getElementById("editPhone").value = donor.phone;
+    document.getElementById("editAddress").value = donor.address;
+    document.getElementById("editDistrict").value = donor.district;
+    document.getElementById("editResidence").value = donor.residence;
+    document.getElementById("editLastDonation").value = donor.lastDonation;
+    deleteIndex = donors.indexOf(donor);
+  } else {
+    alert("المتبرع غير موجود!");
+  }
+}
+
+function saveEdit() {
+  if (deleteIndex !== null) {
+    donors[deleteIndex] = {
+      name: document.getElementById("editName").value,
+      bloodType: document.getElementById("editBloodType").value,
+      phone: document.getElementById("editPhone").value,
+      address: document.getElementById("editAddress").value,
+      district: document.getElementById("editDistrict").value,
+      residence: document.getElementById("editResidence").value,
+      lastDonation: document.getElementById("editLastDonation").value
+    };
+    localStorage.setItem("donors", JSON.stringify(donors));
+    renderSearchTable();
+    closeEditPopup();
+  }
+}
+
+function deleteDonor() {
+  if (deleteIndex !== null) {
+    donors.splice(deleteIndex, 1);
+    localStorage.setItem("donors", JSON.stringify(donors));
+    renderSearchTable();
+    closeEditPopup();
+  }
+}
+
+function confirmDelete() {
+  deleteDonor();
+  document.getElementById('deleteConfirmPopup').style.display = 'none';
+}
+
+function cancelDelete() {
+  document.getElementById('deleteConfirmPopup').style.display = 'none';
+}
+</script>
+
+</body>
+</html>
